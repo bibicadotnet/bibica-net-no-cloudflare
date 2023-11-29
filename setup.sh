@@ -10,14 +10,22 @@ sudo apt install -y htop zip unzip screen nano wget curl gpg
 
 
 # Webinoly Clean Installation
-wget -qO weby qrok.es/wy && sudo bash weby -clean
-
-
-# setup Webinoly php 7.4
-sudo wget --no-check-certificate https://raw.githubusercontent.com/bibicadotnet/webinoly/master/weby -O weby && sudo chmod +x weby && sudo ./weby -clean
-sudo rm /opt/webinoly/webinoly.conf
-sudo wget --no-check-certificate https://raw.githubusercontent.com/bibicadotnet/Oracle-VM-Standard-A1-Flex-Webinoly/main/vm_standard_a1_flex.conf -O /opt/webinoly/webinoly.conf
+sudo wget -qO weby qrok.es/wy && sudo bash weby -clean
+sudo wget --no-check-certificate https://raw.githubusercontent.com/bibicadotnet/bibica-net-no-cloudflare/main/webinoly.conf -O /opt/webinoly/webinoly.conf
 sudo stack -lemp -build=light
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Optimization PHP, MariaDB
 sudo wget --no-check-certificate https://raw.githubusercontent.com/bibicadotnet/Oracle-VM-Standard-A1-Flex-Webinoly/main/php.ini -O /etc/php/7.4/fpm/php.ini
