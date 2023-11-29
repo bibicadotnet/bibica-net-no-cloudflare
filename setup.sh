@@ -8,35 +8,27 @@ export LC_ALL=en_US.UTF-8
 sudo apt update -y
 sudo apt install -y htop zip unzip screen nano wget curl gpg 
 
+# Set nameserver google, cloudflare
+echo -e "nameserver 8.8.8.8\nnameserver 1.1.1.1" > /etc/resolv.conf
+
+# Cài đặt MTU location Viet Nam
+ip link set dev eth0 mtu 1300
 
 # Webinoly Clean Installation
 sudo wget -qO weby qrok.es/wy && sudo bash weby -clean
 sudo wget --no-check-certificate https://raw.githubusercontent.com/bibicadotnet/bibica-net-no-cloudflare/main/webinoly.conf -O /opt/webinoly/webinoly.conf
 sudo stack -lemp -build=light
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-# Optimization PHP, MariaDB
-sudo wget --no-check-certificate https://raw.githubusercontent.com/bibicadotnet/Oracle-VM-Standard-A1-Flex-Webinoly/main/php.ini -O /etc/php/7.4/fpm/php.ini
-sudo service php7.4-fpm restart
-sudo wget --no-check-certificate https://raw.githubusercontent.com/bibicadotnet/bibica.net/main/my.cnf -O /etc/mysql/my.cnf
-sudo service mysql restart
-
-# off filewall
+# Tắt Firewall
 sudo apt remove iptables-persistent -y
 sudo ufw disable
 sudo iptables -F
+
+# Optimization PHP, MariaDB
+sudo wget --no-check-certificate https://raw.githubusercontent.com/bibicadotnet/bibica-net-no-cloudflare/main/php.ini -O /etc/php/7.4/fpm/php.ini
+sudo service php7.4-fpm restart
+sudo wget --no-check-certificate https://raw.githubusercontent.com/bibicadotnet/bibica-net-no-cloudflare/main/my.cnf -O /etc/mysql/my.cnf
+sudo service mysql restart
 
 # setup wp-cli
 curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
@@ -47,11 +39,22 @@ sudo mv wp-cli.phar /usr/local/bin/wp
 # setup rclone
 sudo -v ; curl https://rclone.org/install.sh | sudo bash
 
-# Bypass Oracle VM.Standard.A1.Flex
-#sudo wget --no-check-certificate https://raw.githubusercontent.com/bibicadotnet/NeverIdle-Oracle/master/VM.Standard.A1.Flex.4GB.RAM.sh -O /usr/local/bin/bypass_oracle.sh
-#chmod +x /usr/local/bin/bypass_oracle.sh
-#nohup /usr/local/bin/bypass_oracle.sh >> ./out 2>&1 <&- &
-#chown -R www-data:www-data /var/www/bibica.net/
+# Cài đặt docker
+curl -sSL https://get.docker.com | sh
+sudo usermod -aG docker $(whoami)
+sudo systemctl start docker
+sudo systemctl enable docker
+apt install docker-compose -y
+
+sudo apt update && sudo apt upgrade -y
+sudo webinoly -verify
+sudo webinoly -info
+
+
+
+
+
+
 
 # setup crontab cho wp_cron and simply-static
 mkdir -p /var/www/bibica.net/static-files-temp
